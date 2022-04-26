@@ -1,0 +1,40 @@
+datasource postgres {
+  provider = "postgresql"
+  url      = env("POSTGRESQL_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  createdAt DateTime @default(now())
+  firstName String?
+  id        String   @id @default(cuid())
+  lastName  String?
+  password  String
+  roles     String[]
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
+
+model Comida {
+  calorias    Int?
+  celiacos    Boolean?
+  comidas     Comida[]         @relation(name: "comidas")
+  costo       EnumComidaCosto?
+  createdAt   DateTime         @default(now())
+  foto        String?
+  id          String           @id @default(cuid())
+  nombre      String?
+  ultimoUso   DateTime?
+  updatedAt   DateTime         @updatedAt
+  usuarioId   Comida?          @relation(name: "comidas", fields: [usuarioIdId], references: [id])
+  usuarioIdId String?
+}
+
+enum EnumComidaCosto {
+  Barato
+  Medio
+  Caro
+}
